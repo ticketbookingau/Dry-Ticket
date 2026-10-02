@@ -11,14 +11,6 @@ import { DarkCta } from '../components/DarkCta'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import type { EventItem } from '../data/events'
 
-const alumni = [
-  'Arijit Singh', 'Sonu Nigam', 'A R Rahman', 'Kapil Sharma', 'Gurdas Maan',
-  'Sunidhi Chauhan', 'Karan Aujla', 'AP Dhillon', 'Atif Aslam', 'Udit Narayan',
-  'Salim–Sulaiman', 'Rahat Fateh Ali Khan', 'Ilaiyaraaja', 'Kanika Kapoor',
-  'Usha Uthup', 'Garry Sandhu', 'Tarsem Jassar', 'Sunil Grover', 'Salman Khan',
-  'Bombay Vikings', 'Yuvan Shankar Raja', 'Arjan Dhillon', 'Nisha Bano', 'Jassi Khan',
-]
-
 // Soft tints for initials avatars, picked by name so each artist keeps the same colour.
 const TINTS = [
   'bg-blue-light text-blue',
@@ -89,7 +81,7 @@ export default function Artists() {
     <>
       <Meta
         title="Artists"
-        description={`${artists.length} artists touring Australia and New Zealand with tickets on Mytix, and the names who have played our stages before.`}
+        description={`${artists.length} artists with upcoming shows listed on Mytix.`}
       />
 
       {/* Filmstrip hero, graded to the selected category */}
@@ -236,33 +228,13 @@ export default function Artists() {
           </Reveal>
         </section>
 
-        {/* Alumni */}
-        <section className="section">
-          <Reveal>
-            <SectionHead
-              title="Previously on our stages"
-              blurb="Some of the names we’ve ticketed across Australia and New Zealand since 2013."
-            />
-            <ul className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {alumni.map((n) => (
-                <li key={n} className="flex items-center gap-3 rounded-xl border border-line bg-white p-3">
-                  <Avatar className="h-10 w-10">
-                    <AvatarFallback className={cx('text-sm', tint(n))}>{initials(n)}</AvatarFallback>
-                  </Avatar>
-                  <span className="truncate text-sm font-medium text-ink">{n}</span>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-        </section>
-
         <section className="section">
           <Reveal>
             <DarkCta
               label="For promoters"
-              title="Touring Australia? Bring your show."
-              body="Ticketing, seating and door scanning for tours across Australia and New Zealand — set up by our team, reported to you live."
-              action="List your tour"
+              title="Bringing an artist to Australia?"
+              body="Tell us about the tour and we’ll talk about listing the dates here."
+              action="Get in touch"
             />
           </Reveal>
         </section>

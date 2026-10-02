@@ -1,6 +1,6 @@
 import { createElement, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Building2, CalendarDays, MapPin, Users } from 'lucide-react'
+import { Building2, CalendarDays, MapPin } from 'lucide-react'
 import { useEvents } from '../lib/events'
 import { plural } from '../lib/copy'
 import { cx, fmtDateShort } from '../lib/format'
@@ -12,55 +12,11 @@ import type { EventItem } from '../data/events'
 import { PageHero } from '../components/PageHero'
 import { DarkCta } from '../components/DarkCta'
 
-const NOTABLE_VENUES = [
-  {
-    name: 'Sydney Opera House',
-    city: 'Sydney',
-    state: 'NSW',
-    type: 'Concert hall',
-    capacity: '5,738',
-    image: 'https://images.unsplash.com/photo-1528072164453-f4e8ef0d475a?auto=format&fit=crop&w=1400&q=80',
-  },
-  {
-    name: 'Palais Theatre',
-    city: 'Melbourne',
-    state: 'VIC',
-    type: 'Historic theatre',
-    capacity: '2,896',
-    image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Riverside Theatres',
-    city: 'Sydney',
-    state: 'NSW',
-    type: 'Performing arts centre, Parramatta',
-    capacity: '1,200',
-    image: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'The Tivoli',
-    city: 'Brisbane',
-    state: 'QLD',
-    type: 'Live music venue',
-    capacity: '1,500',
-    image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'RAC Arena',
-    city: 'Perth',
-    state: 'WA',
-    type: 'Arena',
-    capacity: '15,500',
-    image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Adelaide Entertainment Centre',
-    city: 'Adelaide',
-    state: 'SA',
-    type: 'Arena and theatre',
-    capacity: '11,300',
-    image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=800&q=80',
-  },
+// Stock photos for the hero; captions name cities only, not venues we work with.
+const HERO_TILES = [
+  { city: 'Sydney', image: 'https://images.unsplash.com/photo-1528072164453-f4e8ef0d475a?auto=format&fit=crop&w=1400&q=80' },
+  { city: 'Melbourne', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80' },
+  { city: 'Brisbane', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80' },
 ]
 
 type VenueStat = { name: string; metro: string; street?: string; count: number; next: EventItem }
@@ -97,7 +53,7 @@ export default function Venues() {
     <>
       <Meta
         title="Venues"
-        description={`${venueStats.length} venues with upcoming shows on Mytix, plus the major stages we ticket across Australia.`}
+        description={`${venueStats.length} venues with upcoming shows listed on Mytix.`}
       />
 
       <PageHero
@@ -107,16 +63,16 @@ export default function Venues() {
             Where the <span className="text-blue">shows</span> are.
           </>
         }
-        lede="Every stage with tickets on sale — from heritage theatres to arenas, across Australia and New Zealand."
+        lede="Every venue with a show listed here, grouped by city."
         stats={[
           { n: venueStats.length, label: 'Venues' },
           { n: cities.length, label: 'Cities' },
           { n: live.length, label: 'Shows on sale' },
         ]}
-        tiles={[NOTABLE_VENUES[0], NOTABLE_VENUES[1], NOTABLE_VENUES[3]].map((v) => ({
-          image: v.image,
-          title: v.name,
-          meta: `${v.city} · ${v.capacity} seats`,
+        tiles={HERO_TILES.map((t) => ({
+          image: t.image,
+          title: t.city,
+          meta: `${live.filter((e) => e.metro === t.city).length} shows listed`,
         }))}
       />
 
@@ -217,56 +173,6 @@ export default function Venues() {
           </Reveal>
         </section>
 
-        {/* Major stages — bento grid, text over imagery */}
-        <section className="section">
-          <Reveal>
-            <SectionHead
-              eyebrow="Across Australia"
-              title="Major stages we ticket"
-              blurb="The halls, theatres and arenas our organisers book most."
-            />
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:grid-rows-[260px_260px_260px]">
-              {NOTABLE_VENUES.map((v, i) => (
-                <Link
-                  key={v.name}
-                  to={`/events?city=${encodeURIComponent(v.city)}`}
-                  className={cx(
-                    'group relative isolate block min-h-64 overflow-hidden rounded-[20px] bg-ink shadow-md',
-                    i === 0 && 'sm:col-span-2 lg:row-span-2 lg:min-h-0',
-                  )}
-                >
-                  <Img
-                    src={v.image}
-                    alt={v.name}
-                    loading="lazy"
-                    className="absolute inset-0 -z-10 h-full w-full transition-transform duration-700 ease-out group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/85 via-black/30 to-black/0" />
-
-                  <span className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-ink backdrop-blur">
-                    <Users className="h-3.5 w-3.5 text-blue" />
-                    {v.capacity}
-                  </span>
-
-                  <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-                    <span className="t-label text-white/70">
-                      {v.city}, {v.state}
-                    </span>
-                    <h3 className={cx('mt-2 font-bold tracking-tight text-white', i === 0 ? 't-h2' : 'text-xl')}>
-                      {v.name}
-                    </h3>
-                    <p className="mt-1 text-sm text-white/70">{v.type}</p>
-                    <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-white">
-                      {v.city} events
-                      <Arrow className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </Reveal>
-        </section>
-
         {/* Next on stage */}
         <section className="section">
           <Reveal>
@@ -294,9 +200,9 @@ export default function Venues() {
           <Reveal>
             <DarkCta
               label="For venues"
-              title="Run a venue? Let’s fill it."
-              body="We bring the box office — online sales, seating maps and door scanning — and the promoters who book your stage."
-              action="Partner with us"
+              title="Run a venue?"
+              body="If you have shows coming up, we’d be glad to hear from you about listing them here."
+              action="Get in touch"
             />
           </Reveal>
         </section>

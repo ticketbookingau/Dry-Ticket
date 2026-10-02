@@ -142,7 +142,7 @@ export default function Events() {
     <div className="flex flex-col pt-16 md:flex-row">
       <Meta
         title={title}
-        description={`Browse ${results.length} ${plural(results.length, 'event')} with official tickets — filter by city, category and date.`}
+        description={`Browse ${results.length} ${plural(results.length, 'event')} — filter by city, category and date.`}
       />
 
       {/* Filters: an icon rail on desktop that expands on hover, a full-screen drawer on mobile */}

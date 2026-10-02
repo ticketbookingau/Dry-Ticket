@@ -1,7 +1,7 @@
-# Mytix — redesign
+# Mytix
 
-A React + Vite rebuild of [drytickets.com.au](https://drytickets.com.au/), Australia
-and New Zealand's ticketing platform for Bollywood, Punjabi, Sufi and desi live events.
+Event listings and booking requests for Virsa Films Production (Sydney NSW), built with
+React + Vite. Business details (company, owner, phone, location) live in `src/lib/site.ts`.
 
 ## Running it
 
@@ -56,9 +56,9 @@ src/
 
 ## Data
 
-`src/data/events.ts` was generated from the live site's JSON-LD event feed, so titles,
-dates, venues, addresses, artists, ratings and ticket tiers with real prices are all
-genuine. Poster and artist images are referenced from `drytickets.com.au`.
+`src/data/events.ts` is sample data copied from a third-party ticketing site's public event
+feed. These are other promoters' shows, and the poster and artist images are hotlinked from
+that site. Replace them with Virsa Films Production's own events before launch.
 
 Two things are derived rather than copied:
 
@@ -166,33 +166,19 @@ If the Supabase project URL changes, update `connect-src` in the CSP in `vercel.
 ## What is mocked
 
 This is a front-end redesign. No payment is taken: checkout sends a booking request by
-email (see above). Presale signup and the organiser enquiry form show a loading state
-and a confirmation but post nowhere (search for `ponytail`).
+email (see above). Presale signup and the organiser enquiry form open the visitor's email
+app with a pre-filled message to the bookings inbox.
 
-## ⚠️ Placeholder copy — not Mytix's real terms
+## ⚠️ Placeholder copy — check with the owner
 
-Some copy in this demo was written to fill the design and is **not** taken from
-Mytix. Do not treat any of it as the company's actual policy, and replace it
-with real figures before this goes anywhere near production:
-
-| Placeholder claim | Location |
+| Placeholder | Location |
 | --- | --- |
 | 4.5% booking fee (drives the checkout total) | `src/lib/pricing.ts` |
-| "No setup fee — we earn on tickets sold" | `src/pages/Sell.tsx` |
-| "Event page live within 48 hours" | `src/pages/Sell.tsx` |
-| "Dedicated account manager on the night" | `src/pages/Sell.tsx` |
-| "Settlement within 5 business days" | `src/pages/Sell.tsx` |
-| The five FAQs, incl. the refund/exchange answer | `src/pages/About.tsx` |
-| The 2013–2026 company timeline | `src/pages/About.tsx` |
-
-The company's real FAQ, refund and terms pages exist on drytickets.com.au and were
-not consulted when writing the above.
-
-Section headlines and marketing lines throughout are likewise original copy written
-for this redesign, not lifted from the source site.
+| FAQ answers (reply times, refunds) | `src/pages/About.tsx` |
+| "Costs agreed with you upfront" and the four listing steps | `src/pages/Sell.tsx` |
 
 ## Note on images
 
-Some posters on the origin server are 500KB PNGs served without a CDN. The hero
+Some posters on the image host are 500KB PNGs served without a CDN. The hero
 preloads and fades its images to cover that, but a production build should proxy
 them through an image CDN and serve WebP/AVIF at the sizes actually used.

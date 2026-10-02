@@ -1,5 +1,6 @@
 import { Button } from './Primitives'
 import { Arrow } from './Icons'
+import { PHONE, PHONE_HREF } from '../lib/site'
 
 /** Closing call-to-action in the espresso panel used across the site. */
 export function DarkCta({ label, title, body, action }: { label: string; title: string; body: string; action: string }) {
@@ -19,8 +20,8 @@ export function DarkCta({ label, title, body, action }: { label: string; title: 
             {action}
             <Arrow className="h-4 w-4" />
           </Button>
-          <Button href="tel:0452337387" variant="outline-light">
-            Call 0452 337 387
+          <Button href={PHONE_HREF} variant="outline-light">
+            Call {PHONE}
           </Button>
         </div>
       </div>

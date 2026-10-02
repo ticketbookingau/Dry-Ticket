@@ -1,85 +1,89 @@
 import { useState } from 'react'
 import { Button, Field, Input, Meta, Reveal, SectionHead, Textarea } from '../components/Primitives'
 import { Arrow, Bolt, Check, Phone, Pin, Shield, Ticket } from '../components/Icons'
+import { BOOKINGS_INBOX } from '../lib/booking'
+import { COMPANY, LOCATION, OWNER, PHONE, PHONE_HREF } from '../lib/site'
 
 const services = [
   {
     Icon: Ticket,
-    title: 'Online and counter sales',
-    body: 'Your own event page for online sales, plus over-the-counter and agent sales for buyers who pay in cash.',
-  },
-  {
-    Icon: Pin,
-    title: 'Seating maps',
-    body: 'Reserved seats, allocated tables and general admission zones, mapped to your venue and priced by tier.',
+    title: 'An event page',
+    body: 'Your poster, date, venue and ticket types, listed alongside the other shows on the site.',
   },
   {
     Icon: Bolt,
-    title: 'Scanning and printing',
-    body: 'Printed or e-tickets, scanners on the door and live entry counts through the night.',
+    title: 'Booking requests',
+    body: 'Buyers choose their tickets and send a request online, so you can see interest as it comes in.',
+  },
+  {
+    Icon: Pin,
+    title: 'Searchable by city',
+    body: 'Your show appears when people browse events in its city, category or venue.',
   },
   {
     Icon: Shield,
-    title: 'Promotion',
-    body: 'Paid social on Facebook and Instagram and email campaigns to our registered ticket buyers.',
+    title: 'A direct contact',
+    body: `You deal with ${OWNER} and the ${COMPANY} team in ${LOCATION}, not a call centre.`,
   },
 ]
 
 const steps = [
-  { n: '1', title: 'Tell us about the show', body: 'Artist, venue, date and capacity. A short call is usually enough.' },
-  { n: '2', title: 'We build the event page', body: 'Poster, seat map, ticket tiers and payments, ready for your sign-off.' },
-  { n: '3', title: 'Tickets go on sale', body: 'Campaigns go out to our audience while you focus on production.' },
-  { n: '4', title: 'Doors, scanning, settlement', body: 'Scanners on the night, live reporting, and funds settled after the event.' },
+  { n: '1', title: 'Tell us about the show', body: 'Artist, venue, date and ticket types. A short call is usually enough.' },
+  { n: '2', title: 'We agree the details', body: 'How the listing works and what it costs, before anything goes live.' },
+  { n: '3', title: 'Your page goes live', body: 'We set up the event page and publish it once you have signed it off.' },
+  { n: '4', title: 'Requests come in', body: 'We follow up booking requests and keep you updated.' },
 ]
 
-const stats = [
-  { value: '800+', label: 'Events ticketed' },
-  { value: '350+', label: 'Organisers' },
-  { value: '320+', label: 'Venues' },
-  { value: '2013', label: 'Founded' },
-]
+/** Opens the visitor's email app with the enquiry filled in. */
+function emailEnquiry(form: HTMLFormElement) {
+  const data = new FormData(form)
+  const field = (k: string) => String(data.get(k) ?? '').trim()
+  const subject = `Event enquiry: ${field('event')}`
+  const body = [
+    `Name: ${field('name')}`,
+    `Email: ${field('email')}`,
+    `Phone: ${field('phone')}`,
+    `Event or artist: ${field('event')}`,
+    `City: ${field('city')}`,
+    `Expected capacity: ${field('capacity')}`,
+    '',
+    field('message'),
+  ].join('\n')
+  window.location.href = `mailto:${BOOKINGS_INBOX}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+}
 
 export default function Sell() {
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle')
+  const [status, setStatus] = useState<'idle' | 'sent'>('idle')
 
   return (
     <div className="wrap page-top">
       <Meta
         title="Sell tickets"
-        description="Ticketing, seating maps, door scanning and promotion for event organisers in Australia and New Zealand. Send an enquiry or call 0452 337 387."
+        description={`List your event with ${COMPANY} in ${LOCATION}. Send an enquiry or call ${PHONE}.`}
       />
 
       <div className="max-w-3xl">
         <span className="t-label text-blue">For organisers</span>
-        <h1 className="t-h1 mt-3 text-ink">Ticketing, seating and door scanning for your event</h1>
+        <h1 className="t-h1 mt-3 text-ink">Got a show coming up? Put it in front of people.</h1>
         <p className="t-lede mt-4 max-w-xl">
-          Mytix has run box offices for promoters in Australia since 2013 — sales, seat maps, scanning, printing
-          and promotion, handled by one team.
+          List your event here and let people book with a simple online request. {COMPANY} is based in{' '}
+          {LOCATION} — talk to us about your show and we’ll see how we can help.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Button href="#enquire" size="lg">
             Send an enquiry
             <Arrow className="h-4 w-4" />
           </Button>
-          <Button href="tel:0452337387" variant="outline" size="lg">
+          <Button href={PHONE_HREF} variant="outline" size="lg">
             <Phone className="h-4 w-4" />
-            0452 337 387
+            {PHONE}
           </Button>
         </div>
       </div>
 
-      <div className="mt-16 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {stats.map((s) => (
-          <div key={s.label} className="rounded-xl border border-line bg-surface p-6">
-            <p className="t-h2 text-ink">{s.value}</p>
-            <p className="mt-1 text-sm text-muted">{s.label}</p>
-          </div>
-        ))}
-      </div>
-
       <section className="section">
         <Reveal>
-          <SectionHead eyebrow="What we handle" title="The whole box office, not just checkout" />
+          <SectionHead eyebrow="What you get" title="What a listing includes" />
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {services.map((s) => (
               <div key={s.title} className="card p-6">
@@ -96,7 +100,7 @@ export default function Sell() {
 
       <section className="section">
         <Reveal>
-          <SectionHead eyebrow="How it works" title="From first call to doors open" />
+          <SectionHead eyebrow="How it works" title="From first chat to going live" />
           <ol className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((s) => (
               <li key={s.n} className="card p-6">
@@ -115,15 +119,14 @@ export default function Sell() {
             <span className="t-label text-blue">Enquire</span>
             <h2 className="t-h2 mt-3 text-ink">Tell us about your event</h2>
             <p className="mt-4 text-muted">
-              We reply within one business day with pricing, timelines and a sales plan for your show.
+              Share a few details and we’ll get back to you to talk it through.
             </p>
 
             <ul className="mt-8 space-y-3">
               {[
-                'No setup fee — we earn on tickets sold',
-                'Event page live within 48 hours',
-                'Account manager on the night',
-                'Settlement within 5 business days',
+                'Talk directly with the owner',
+                'Costs agreed with you upfront',
+                'Based locally in Sydney',
               ].map((p) => (
                 <li key={p} className="flex items-start gap-3 text-ink">
                   <span className="mt-1 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-success-light text-success">
@@ -136,11 +139,13 @@ export default function Sell() {
 
             <div className="mt-10 border-t border-line pt-6">
               <p className="t-label text-faint">Or call us</p>
-              <a href="tel:0452337387" className="mt-3 inline-flex items-center gap-2 text-lg font-semibold text-ink hover:text-blue">
+              <a href={PHONE_HREF} className="mt-3 inline-flex items-center gap-2 text-lg font-semibold text-ink hover:text-blue">
                 <Phone className="h-5 w-5 text-blue" />
-                0452 337 387
+                {PHONE}
               </a>
-              <p className="mt-1 text-sm text-muted">Blacktown, NSW · Mon–Fri 9:00am – 5:30pm AEST</p>
+              <p className="mt-1 text-sm text-muted">
+                {OWNER} · {COMPANY}, {LOCATION}
+              </p>
             </div>
           </div>
 
@@ -150,9 +155,13 @@ export default function Sell() {
                 <span className="grid h-12 w-12 place-items-center rounded-full bg-success-light text-success">
                   <Check className="h-6 w-6" />
                 </span>
-                <h3 className="t-h3 mt-4 text-ink">Enquiry received</h3>
+                <h3 className="t-h3 mt-4 text-ink">Almost done — check your email app</h3>
                 <p className="mt-2 max-w-sm text-muted">
-                  We'll reply within one business day. For anything urgent, call 0452 337 387.
+                  Your enquiry should be open in a new email, ready to send. If nothing opened, email{' '}
+                  <a href={`mailto:${BOOKINGS_INBOX}`} className="font-medium text-blue">
+                    {BOOKINGS_INBOX}
+                  </a>{' '}
+                  or call {PHONE}.
                 </p>
                 <Button variant="outline" onClick={() => setStatus('idle')} className="mt-8">
                   Send another enquiry
@@ -162,9 +171,8 @@ export default function Sell() {
               <form
                 onSubmit={(e) => {
                   e.preventDefault()
-                  setStatus('sending')
-                  // ponytail: mocked — post to the enquiry endpoint.
-                  setTimeout(() => setStatus('sent'), 800)
+                  emailEnquiry(e.currentTarget)
+                  setStatus('sent')
                 }}
                 className="space-y-4"
               >
@@ -195,8 +203,8 @@ export default function Sell() {
                 <Field label="Anything else" id="message" hint="Venue, proposed dates, ticket tiers.">
                   <Textarea id="message" name="message" rows={4} maxLength={2000} />
                 </Field>
-                <Button type="submit" size="lg" loading={status === 'sending'} className="w-full">
-                  Send enquiry
+                <Button type="submit" size="lg" className="w-full">
+                  Write enquiry email
                 </Button>
               </form>
             )}

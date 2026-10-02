@@ -55,11 +55,11 @@ export function Hero() {
         className="wrap pointer-events-none relative z-20 w-full pt-16"
       >
         <div className="pointer-events-auto mx-auto max-w-3xl rounded-2xl border border-white/60 bg-white/85 p-6 text-center shadow-xl backdrop-blur-xl sm:p-10">
-          <span className="t-label text-blue">Latest shows · On sale now</span>
-          <h1 className="t-display mt-3 text-ink">Official tickets for live events across Australia.</h1>
+          <span className="t-label text-blue">Upcoming shows</span>
+          <h1 className="t-display mt-3 text-ink">Your next night out starts here.</h1>
           <p className="t-lede mx-auto mt-4 max-w-xl">
-            Concerts, comedy, festivals and cultural shows sold by the organisers themselves — face-value
-            pricing, instant e-tickets, support in Sydney.
+            Search concerts, comedy and cultural nights by city, choose your tickets and send a booking request. A
+            real person from our Sydney team gets back to you.
           </p>
 
           <form onSubmit={search} className="card mt-8 flex flex-col gap-2 p-2 text-left sm:flex-row sm:items-center">

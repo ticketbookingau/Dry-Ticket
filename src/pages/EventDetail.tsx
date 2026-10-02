@@ -2,20 +2,22 @@ import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useEvents } from '../lib/events'
 import { cx, fmtDate, fmtTime, money } from '../lib/format'
-import { blurbOf, plural } from '../lib/copy'
+import { blurbOf } from '../lib/copy'
 import { PosterCard } from '../components/PosterCard'
 import { CheckoutModal } from '../components/CheckoutModal'
 import { Badge, Button, Img, Input, Meta, Reveal, SectionHead } from '../components/Primitives'
-import { Arrow, Cal, Check, Pin, Shield, Star, Ticket } from '../components/Icons'
+import { Arrow, Cal, Check, Pin, Shield, Ticket } from '../components/Icons'
 import NotFound from './NotFound'
 import { BOOKING_FEE_RATE, MAX_TICKETS } from '../lib/pricing'
+import { BOOKINGS_INBOX } from '../lib/booking'
+import { PHONE } from '../lib/site'
 
 
 const notes = [
-  'Mobile e-ticket accepted at the door',
-  'Photo ID required for 18+ areas',
-  'Seating as allocated on your ticket',
-  'Booking fee shown before payment',
+  'Send a booking request — no payment online',
+  'Our team contacts you to confirm',
+  'Booking fee shown before you request',
+  'Entry rules are set by the venue and organiser',
 ]
 
 export default function EventDetail() {
@@ -26,7 +28,7 @@ export default function EventDetail() {
   const [tierIdx, setTierIdx] = useState(0)
   const [qty, setQty] = useState(2)
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
-  const [notify, setNotify] = useState<'idle' | 'sending' | 'done'>('idle')
+  const [notify, setNotify] = useState<'idle' | 'done'>('idle')
 
   const related = useMemo(
     () =>
@@ -105,15 +107,15 @@ export default function EventDetail() {
             <ul className="card mt-4 space-y-3 p-4 text-sm text-ink">
               <li className="flex items-center gap-3">
                 <Shield className="h-4 w-4 shrink-0 text-success" />
-                Official ticket from the primary seller
+                Every booking confirmed by our team
               </li>
               <li className="flex items-center gap-3">
                 <Ticket className="h-4 w-4 shrink-0 text-blue" />
-                E-ticket by email and SMS
+                No payment taken on the website
               </li>
               <li className="flex items-center gap-3">
                 <Check className="h-4 w-4 shrink-0 text-blue" />
-                Support on 0452 337 387
+                Questions? Call {PHONE}
               </li>
             </ul>
           </div>
@@ -123,15 +125,6 @@ export default function EventDetail() {
             <div className="flex flex-wrap items-center gap-2">
               <Badge tone="blue">{event.category}</Badge>
               {event.presale && <Badge tone="warning">Presale</Badge>}
-              {event.rating && (
-                <span className="inline-flex items-center gap-1 text-sm font-medium text-ink">
-                  <Star className="h-4 w-4 text-warning" />
-                  {event.rating.toFixed(1)}
-                  <span className="font-normal text-muted">
-                    ({event.ratingCount} {plural(event.ratingCount ?? 0, 'review')})
-                  </span>
-                </span>
-              )}
             </div>
 
             <h1 className="t-h1 mt-4 text-ink">{event.title}</h1>
@@ -168,28 +161,29 @@ export default function EventDetail() {
                       <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-success-light text-success">
                         <Check className="h-6 w-6" />
                       </span>
-                      <h2 className="t-h3 mt-4 text-ink">You're on the list</h2>
+                      <h2 className="t-h3 mt-4 text-ink">Almost done</h2>
                       <p className="mt-2 text-sm text-muted">
-                        We'll email your presale code before tickets go on general sale.
+                        Send the email that just opened and we'll let you know when tickets are available.
                       </p>
                     </>
                   ) : (
                     <>
                       <h2 className="t-h3 text-ink">Tickets are not on sale yet</h2>
                       <p className="mt-2 text-sm text-muted">
-                        Leave your email and we'll send a presale code 24 hours before general sale.
+                        Leave your email and we'll let you know when tickets become available.
                       </p>
                       <form
                         onSubmit={(e) => {
                           e.preventDefault()
-                          setNotify('sending')
-                          // ponytail: mocked — wire to the mailing-list endpoint.
-                          setTimeout(() => setNotify('done'), 700)
+                          const email = new FormData(e.currentTarget).get('email')
+                          const body = `Please let me know when tickets for ${event.title} go on sale.\n\nMy email: ${email}`
+                          window.location.href = `mailto:${BOOKINGS_INBOX}?subject=${encodeURIComponent(`Ticket alert: ${event.title}`)}&body=${encodeURIComponent(body)}`
+                          setNotify('done')
                         }}
                         className="mt-6 space-y-3"
                       >
-                        <Input type="email" required maxLength={254} placeholder="you@example.com" aria-label="Email address" autoComplete="email" />
-                        <Button type="submit" loading={notify === 'sending'} className="w-full">
+                        <Input name="email" type="email" required maxLength={254} placeholder="you@example.com" aria-label="Email address" autoComplete="email" />
+                        <Button type="submit" className="w-full">
                           Notify me
                         </Button>
                       </form>

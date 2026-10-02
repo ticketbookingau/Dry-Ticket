@@ -7,35 +7,29 @@ import { CategoryBrowse, CityBrowse } from '../components/BrowseSections'
 import { EventRow, PosterCard } from '../components/PosterCard'
 import { Button, GroupHead, Meta, Reveal, SectionHead, SkeletonCard } from '../components/Primitives'
 import { Arrow, Bolt, Check, Shield, Ticket } from '../components/Icons'
+import { COMPANY, PHONE, PHONE_HREF } from '../lib/site'
 
 const guarantees = [
   {
-    Icon: Shield,
-    title: 'Issued by the organiser',
-    body: 'We are the primary seller. Every ticket is issued on behalf of the promoter and scanned at the door.',
+    Icon: Ticket,
+    title: 'Book without paying upfront',
+    body: 'Choose your tickets and send a request. Nothing is charged on the website.',
   },
   {
     Icon: Bolt,
-    title: 'E-ticket in minutes',
-    body: 'Your ticket arrives by email and SMS as soon as payment clears. Show the QR code on your phone.',
+    title: 'Clear pricing',
+    body: 'The ticket price and booking fee are shown together before you send your request.',
   },
   {
-    Icon: Ticket,
-    title: 'Face-value pricing',
-    body: 'You pay the ticket price plus the booking fee shown before checkout. No resale markups.',
+    Icon: Shield,
+    title: 'Confirmed by a person',
+    body: 'Our team checks every request and contacts you to finalise your tickets.',
   },
   {
     Icon: Check,
-    title: 'Support in Sydney',
-    body: 'Call 0452 337 387, Monday to Friday, 9:00am – 5:30pm AEST.',
+    title: 'Based in Sydney',
+    body: `Questions about a show? Call us on ${PHONE}.`,
   },
-]
-
-const stats = [
-  { value: '800+', label: 'Shows ticketed' },
-  { value: '600+', label: 'Artists hosted' },
-  { value: '320+', label: 'Venues in AU & NZ' },
-  { value: '2013', label: 'Selling tickets since' },
 ]
 
 const viewAll = (
@@ -68,7 +62,7 @@ export default function Home() {
     <>
       <Meta
         title="Mytix"
-        description="Official tickets for concerts, comedy, festivals and cultural events across Australia and New Zealand. Face-value pricing and instant e-tickets."
+        description="Find concerts, comedy and cultural events across Australia and send a booking request online. Run by Virsa Films Production, Sydney."
       />
       <Hero />
 
@@ -123,7 +117,7 @@ export default function Home() {
 
       <section className="wrap section">
         <Reveal>
-          <SectionHead eyebrow="Why Mytix" title="Buying from the primary seller" />
+          <SectionHead eyebrow="How booking works" title="Simple, and handled by real people" />
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {guarantees.map((g) => (
               <div key={g.title} className="card p-6">
@@ -147,7 +141,7 @@ export default function Home() {
               e.currentTarget.style.setProperty('--spot-x', `${e.clientX - r.left}px`)
               e.currentTarget.style.setProperty('--spot-y', `${e.clientY - r.top}px`)
             }}
-            className="group relative grid grid-cols-1 gap-10 overflow-hidden rounded-[28px] border border-[rgba(238,228,218,0.16)] bg-[linear-gradient(135deg,#16110e,#2b211b)] p-8 shadow-[0_32px_90px_-56px_rgba(20,16,12,0.72)] sm:p-12 lg:grid-cols-2 lg:items-center"
+            className="group relative grid grid-cols-1 gap-10 overflow-hidden rounded-[28px] border border-[rgba(238,228,218,0.16)] bg-[linear-gradient(135deg,#16110e,#2b211b)] p-8 shadow-[0_32px_90px_-56px_rgba(20,16,12,0.72)] sm:p-12"
           >
             <span
               aria-hidden
@@ -159,28 +153,20 @@ export default function Home() {
             />
             <div className="relative">
               <span className="t-label text-white/60">For organisers</span>
-              <h2 className="t-h2 mt-3 text-white">Selling a show? We run the box office.</h2>
+              <h2 className="t-h2 mt-3 text-white">Putting on a show? Let’s talk.</h2>
               <p className="mt-4 max-w-lg text-white/70">
-                Online and counter sales, reserved seating maps, door scanning and printed tickets — set up by our
-                team and reported to you live on the night.
+                {COMPANY} can list your event here and take booking requests for you. Tell us about the show and
+                we’ll work out together what suits it.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button to="/sell" variant="light">
                   List your event
                   <Arrow className="h-4 w-4" />
                 </Button>
-                <Button href="tel:0452337387" variant="outline-light">
-                  Call 0452 337 387
+                <Button href={PHONE_HREF} variant="outline-light">
+                  Call {PHONE}
                 </Button>
               </div>
-            </div>
-            <div className="relative grid grid-cols-2 gap-4">
-              {stats.map((s) => (
-                <div key={s.label} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-sm">
-                  <p className="t-h2 text-white">{s.value}</p>
-                  <p className="mt-1 text-sm text-white/60">{s.label}</p>
-                </div>
-              ))}
             </div>
           </div>
         </Reveal>

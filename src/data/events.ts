@@ -1,4 +1,4 @@
-// Auto-derived from the live DryTickets schema.org event feed.
+// Sample event data used when Supabase is not configured.
 export type Tier = { name: string; price: number; availability: string }
 export type Artist = { name: string; image?: string }
 

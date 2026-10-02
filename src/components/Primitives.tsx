@@ -3,10 +3,9 @@ import type { ImgHTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAttri
 import { Link } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
 import { cx } from '../lib/format'
+import { SITE_NAME as SITE } from '../lib/site'
 
 /* ------------------------------------------------------------------ Meta */
-
-const SITE = 'Mytix'
 
 function setMeta(attr: 'name' | 'property', key: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`)
